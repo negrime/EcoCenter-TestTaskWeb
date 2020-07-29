@@ -1,0 +1,66 @@
+﻿@page "{handler?}"
+@model IndexModel
+@{
+    ViewData["Title"] = "Тестовое задание";
+}
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js" asp-append-version="true"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css">
+
+<div class="text-center">
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Категория</th>
+                <th scope="col">Название</th>
+                <th scope="col">Авторы</th>
+                <th scope="col">Год издания</th>
+                <th scope="col">Цена</th>
+            </tr>
+        </thead>
+        <tbody id="app">
+            <tr v-for="item in info.data">
+                <td>{{item.category}} </td>
+                <td>{{item.title}} </td>
+                <td>
+                    <span v-if="item.authors.length < 2">
+                        <span v-for="author in item.authors">
+                            {{author}}
+                        </span>
+                    </span>
+                    <span v-else>
+                        <ul v-for="author in item.authors" :key="author">
+                            <li> {{author}} </li>
+                        </ul>
+                    </span>
+
+
+                </td>
+                <td>{{item.year}} </td>
+                <td>{{item.price}} </td>
+
+            </tr>
+        </tbody>
+    </table>
+
+
+    <p> Условие тестового задания - <a href="https://eco-c.ru/ecology/info/задание/" target="_blank">ссылка</a></p>
+
+    <script>
+
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    info: null
+                };
+            },
+            mounted() {
+                axios
+                    .get('https://localhost:5001/bookslist')
+                    .then(response => (this.info = response));
+            }
+        });
+    </script>
+</div>
